@@ -351,7 +351,7 @@ public class Main {
     }
 
     private void insertProducts(Connection conn, int id, String name,int price,int catid) {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Products (id, name,price,catid) VALUES (? , ? , ? , ?")) {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO products (id, name,price,catid) VALUES (? , ? , ? , ?)")) {
             ps.setInt(1, id);
             ps.setString(2, name);
             ps.setInt(3, price);
