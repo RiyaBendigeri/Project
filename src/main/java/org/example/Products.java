@@ -1,51 +1,61 @@
 package org.example;
 
-public class Products {
-    private int id;
-    private String name;
-    private int price;
-    private int catID;
+import jakarta.persistence.*;
 
-    Products(int id,String name,int price,int catID)
+@Entity
+@Table(name="products")
+public class Products {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column
+    private int id;
+    @Column
+    private String name;
+    @Column
+    private int price;
+    @Column
+    private int catid;
+    public Products(){}
+    public Products(int id,String name,int price,int catid)
     {
         this.id=id;
         this.name=name;
         this.price=price;
-        this.catID=catID;
+        this.catid=catid;
 
     }
-    int getID()
+    public int getID()
     {
         return(this.id);
     }
-    String getName()
+    public String getName()
     {
         return(this.name);
     }
-    int getPrice()
+    public int getPrice()
     {
         return(this.price);
     }
-    int getcatID()
+    public int getcatid()
     {
-        return(this.catID);
+        return(this.catid);
     }
 
-    void setID(int id)
+    public void setID(int id)
     {
         this.id=id;
     }
-    void setName(String name)
+    public void setName(String name)
     {
         this.name=name;
     }
-    void setPrice(int Price)
+    public void setPrice(int Price)
     {
         this.price=Price;
     }
-    void setcatID(int catID)
+    public void setcatid(int catid)
     {
-        this.catID=catID;
+        this.catid=catid;
     }
 
 }

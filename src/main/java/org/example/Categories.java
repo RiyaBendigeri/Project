@@ -1,30 +1,39 @@
 package org.example;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="categories")
 public class Categories {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column
     private int id;
+    @Column
     private String name;
-    Categories(int id,String name)
+    public Categories(){}
+    public Categories(int id,String name)
     {
         this.id=id;
         this.name=name;
     }
-    int getID()
+    public int getID()
     {
         return(this.id);
     }
-    String getName()
+    public String getName()
     {
         return(this.name);
     }
-    void setID(int id)
+    public void setID(int id)
     {
         this.id=id;
     }
-    void setName(String name)
+    public void setName(String name)
     {
         this.name=name;
     }
-    void deleteobj(int id)
+    public void deleteobj(int id)
     {
         this.id=0;
         this.name=null;

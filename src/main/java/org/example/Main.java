@@ -257,7 +257,7 @@ public class Main {
 //}
 
 
-
+/*
 import java.sql.*;
 
 public class Main {
@@ -273,7 +273,7 @@ public class Main {
 
         if (conn != null) {
 
-            //main.insertCategory(conn, 5, "Furniture");
+            main.insertCategory(conn, 5, "Furniture");
             main.updateCategory(conn, 5, "Brands");
             main.fetchCategories(conn);
             main.deleteCategory(conn, 5);
@@ -397,4 +397,20 @@ public class Main {
             System.out.println("Error closing connection: " + e.getMessage());
         }
     }
+}
+*/
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@SpringBootApplication
+
+public class Main {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+
+    }
+
 }
