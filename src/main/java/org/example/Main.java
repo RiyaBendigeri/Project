@@ -268,18 +268,23 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
 
-        // Establishing connection
+
         Connection conn = main.getConnection();
 
         if (conn != null) {
-            main.fetchCategories(conn);
-            main.insertCategory(conn, 5, "Furniture");
+
+            //main.insertCategory(conn, 5, "Furniture");
             main.updateCategory(conn, 5, "Brands");
+            main.fetchCategories(conn);
             main.deleteCategory(conn, 5);
-            main.fetchProducts(conn);
-            main.insertProducts(conn,2,"Laptop",2000,1);
+
+            //main.insertProducts(conn,2,"Laptop",2000,5);
             main.updateProducts(conn,2,"lapitopi");
-            main.deleteProduct(conn,2);
+            main.fetchProducts(conn);
+            //main.deleteProduct(conn,2);
+            //main.deleteCategory(conn, 5);
+            //main.fetchCategories(conn);
+            //main.fetchProducts(conn);
             main.closeConnection(conn);
 
         }
