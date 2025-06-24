@@ -56,6 +56,7 @@ public class CategoryController {
                     if(updates.containsKey("name")){
                         categories.setName((String) updates.get("name"));
                     }
+
                     return ResponseEntity.ok(repo.save(categories));
                 })
                 .orElse(ResponseEntity.notFound().build());
