@@ -1,8 +1,10 @@
 
-    package org.example;
+    package org.example.controller;
 
+    import org.example.repository.CategoryRepository;
+    import org.example.model.Products;
+    import org.example.repository.ProductsRepository;
     import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
 
