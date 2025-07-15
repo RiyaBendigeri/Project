@@ -400,8 +400,8 @@ public class Main {
 }
 */
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;//launches the springboot application
+import org.springframework.boot.autoconfigure.SpringBootApplication;//adds all annotations
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication

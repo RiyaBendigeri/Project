@@ -1,13 +1,13 @@
 package org.example.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;//jpa //provides the ORM functionality tables->objects
 
-@Entity
+@Entity//table
 @Table(name="categories")
 public class Categories {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column
+    @Id//primary key
+    @GeneratedValue(strategy= GenerationType.IDENTITY)//primary key is auto-incremented
+    @Column//column name and properties
     private int id;
     @Column
     private String name;

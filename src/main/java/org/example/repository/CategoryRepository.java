@@ -9,3 +9,4 @@ public interface CategoryRepository extends JpaRepository<Categories,Integer> {
     boolean existsByNameIgnoreCase(String name);
     boolean existsById(int id);
 }
+//jpa creates queries based on method names

@@ -45,14 +45,14 @@ public class ProductsControllerTest {
         testCategory = categoryRepository.save(testCategory);
     }
 
-    // GET ALL PRODUCTS TESTS
+    //test for"/get" when products is empty
     @Test
     void getProducts_WhenNoProducts_ReturnsNoContent() throws Exception {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string("No products available to display"));
     }
-
+    //test for"/get" when products exists
     @Test
     void getProducts_WhenProductsExist_ReturnsProducts() throws Exception {
         // Create test products
@@ -76,7 +76,7 @@ public class ProductsControllerTest {
                 .andExpect(jsonPath("$[1].price").value(500));
     }
 
-    // GET PRODUCT BY ID TESTS
+    //test for"/get:id" when product with that id exists
     @Test
     void getProduct_WhenExists_ReturnsProduct() throws Exception {
         Products product = new Products();
@@ -90,7 +90,7 @@ public class ProductsControllerTest {
                 .andExpect(jsonPath("$.name").value("Laptop"))
                 .andExpect(jsonPath("$.price").value(1000));
     }
-
+    //test for"/get:id" when product with that id does not exist
     @Test
     void getProduct_WhenNotExists_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/api/products/999"))
@@ -98,7 +98,7 @@ public class ProductsControllerTest {
                 .andExpect(content().string("Product with ID 999 not found"));
     }
 
-    // POST PRODUCT TESTS
+    //test for"/post" when valid data is created
     @Test
     void addProduct_WithValidData_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/api/products")
@@ -108,7 +108,7 @@ public class ProductsControllerTest {
                 .andExpect(jsonPath("$.name").value("Laptop"))
                 .andExpect(jsonPath("$.price").value(1000));
     }
-
+    //test for"/post" when adding a product with duplicate name
     @Test
     void addProduct_WithDuplicateName_ReturnsConflict() throws Exception {
         // First create a product
@@ -125,7 +125,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().string("Product with name 'Laptop' already exists"));
     }
-
+    //test for"/post" when product with that id does not exist
     @Test
     void addProduct_WithInvalidCategoryId_ReturnsNotFound() throws Exception {
         mockMvc.perform(post("/api/products")
@@ -134,7 +134,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Category with ID 999 does not exist"));
     }
-
+    //test for"/post" when product is added but with price invalid
     @Test
     void addProduct_WithInvalidPrice_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/products")
@@ -143,7 +143,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Price must be greater than 0"));
     }
-
+    //test for"/post" when the contents are missing
     @Test
     void addProduct_WithMissingFields_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/products")
@@ -153,7 +153,7 @@ public class ProductsControllerTest {
                 .andExpect(content().string("Product price is required"));
     }
 
-    // PATCH PRODUCT TESTS
+    //test for"/patch:id" when we have updated the price and name
     @Test
     void updateProduct_WithValidData_ReturnsOk() throws Exception {
         // First create a product
@@ -170,7 +170,7 @@ public class ProductsControllerTest {
                 .andExpect(jsonPath("$.name").value("Updated Laptop"))
                 .andExpect(jsonPath("$.price").value(1500));
     }
-
+    //test for"/patch:id" when we have updated  name with a name that has duplicate value
     @Test
     void updateProduct_WithDuplicateName_ReturnsConflict() throws Exception {
         // Create two products

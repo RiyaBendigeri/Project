@@ -1,12 +1,12 @@
 package org.example.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;//jpa provides the ORM
 
-@Entity
+@Entity//table starts
 @Table(name="products")
 public class Products {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)//auto-increment the primary key
     @Column
     private int id;
     @Column
