@@ -24,8 +24,8 @@ public ResponseEntity<?> getAllCategories() {
     try {
         List<Categories> categories = repo.findAll();
         if (categories.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body("No categories found"); // Status: 404 Not Found
+            return ResponseEntity.status(200)
+                    .body(Map.of("message", "No categories available to display"));
         }
         return ResponseEntity.ok(categories); // Status: 200 OK
     } catch(Exception e) {

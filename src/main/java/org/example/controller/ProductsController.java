@@ -25,8 +25,8 @@ public class ProductsController {
         try {
             List<Products> products = repo.findAll();
             if (products.isEmpty()) {
-                return ResponseEntity.status(204)
-                        .body("No products available to display");
+                return ResponseEntity.status(200)  // or just ResponseEntity.ok()
+                        .body(Map.of("message", "No products available to display"));
             }
             return ResponseEntity.ok(products);
         } catch (Exception e) {
