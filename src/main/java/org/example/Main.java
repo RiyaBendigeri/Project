@@ -1,6 +1,6 @@
 package org.example;
 
-
+/*
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,4 +167,250 @@ public class Main {
 
 
     }
+}
+*/
+//
+//import java.sql.*;
+//
+//
+//
+//public class Main {
+//
+//
+//
+//    public static void main(String[] args) {
+//        private static String url = "jdbc:mysql://localhost:3306/project";
+//        private String username = "root";
+//        String password = "cricket@2003";
+//
+//        try {
+//            Class.forName("com.mysql.cj.jdbc.Driver");  // explicitly load driver
+//            Connection conn = DriverManager.getConnection(url, username, password);
+//            System.out.println("Connected successfully!");
+//            Statement stmt = conn.createStatement();
+//            String query = "select * from categories";
+//            ResultSet rs = stmt.executeQuery(query);
+//            while(rs.next())
+//            {
+//                int id = rs.getInt("id");
+//                String name = rs.getString("name");
+//                System.out.println(id+name);
+//            }
+//
+//
+//            /* query = "insert into categories (id,name) values (?,?)";
+//            PreparedStatement ps = conn.prepareStatement(query);
+//            ps.setInt(1,4);
+//            ps.setString(2,"clothing");
+//            int results = ps.executeUpdate();
+//            if(results > 0)
+//            {
+//                System.out.println("data inserted");
+//            }
+//            else{
+//                System.out.println("not able to insert data");
+//            }
+//            */
+//
+//            //update
+////            query = "update categories set name = ? where id = ?";
+////            PreparedStatement ps = conn.prepareStatement(query);
+////
+////            ps.setString(1,"brands");
+////            ps.setInt(2,2);
+////            int results = ps.executeUpdate();
+////            if(results > 0)
+////            {
+////                System.out.println("data updated");
+////            }
+////            else{
+////                System.out.println("not able to insert data");
+////            }
+//
+//            query = "delete from categories where id = ?";
+//            PreparedStatement ps = conn.prepareStatement(query);
+//
+//
+//            ps.setInt(1,2);
+//            int results = ps.executeUpdate();
+//            if(results > 0)
+//            {
+//                System.out.println("data deleted");
+//            }
+//            else{
+//                System.out.println("not able to insert data");
+//            }
+//
+//
+//
+//
+//
+//
+//
+//            conn.close();
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("Driver class not found: " + e.getMessage());
+//        } catch (SQLException e) {
+//            System.out.println("SQL Exception: " + e.getMessage());
+//        }
+//    }
+//}
+
+
+/*
+import java.sql.*;
+
+public class Main {
+    private static final String URL = "jdbc:mysql://localhost:3306/project";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "cricket@2003";
+
+    public static void main(String[] args) {
+        Main main = new Main();
+
+
+        Connection conn = main.getConnection();
+
+        if (conn != null) {
+
+            main.insertCategory(conn, 5, "Furniture");
+            main.updateCategory(conn, 5, "Brands");
+            main.fetchCategories(conn);
+            main.deleteCategory(conn, 5);
+
+            //main.insertProducts(conn,2,"Laptop",2000,5);
+            main.updateProducts(conn,2,"lapitopi");
+            main.fetchProducts(conn);
+            //main.deleteProduct(conn,2);
+            //main.deleteCategory(conn, 5);
+            //main.fetchCategories(conn);
+            //main.fetchProducts(conn);
+            main.closeConnection(conn);
+
+        }
+    }
+
+    private Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Connection Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void fetchCategories(Connection conn) {
+        try (Statement stmt = conn.createStatement()) {
+            String query = "SELECT * FROM categories";
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " " + rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching categories: " + e.getMessage());
+        }
+    }
+
+    private void insertCategory(Connection conn, int id, String name) {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO categories (id, name) VALUES (?, ?)")) {
+            ps.setInt(1, id);
+            ps.setString(2, name);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Category inserted successfully!" : "Insertion failed.");
+        } catch (SQLException e) {
+            System.out.println("Insert Error: " + e.getMessage());
+        }
+    }
+
+    private void updateCategory(Connection conn, int id, String newName) {
+        try (PreparedStatement ps = conn.prepareStatement("UPDATE categories SET name = ? WHERE id = ?")) {
+            ps.setString(1, newName);
+            ps.setInt(2, id);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Category updated successfully!" : "Update failed.");
+        } catch (SQLException e) {
+            System.out.println("Update Error: " + e.getMessage());
+        }
+    }
+
+    private void deleteCategory(Connection conn, int id) {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM categories WHERE id = ?")) {
+            ps.setInt(1, id);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Category deleted successfully!" : "Deletion failed.");
+        } catch (SQLException e) {
+            System.out.println("Delete Error: " + e.getMessage());
+        }
+    }
+    private void fetchProducts(Connection conn) {
+        try (Statement stmt = conn.createStatement()) {
+            String query = "SELECT * FROM products";
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " " + rs.getString("name")+" " + rs.getInt("price")+" " + rs.getInt("catID"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching products: " + e.getMessage());
+        }
+    }
+
+    private void insertProducts(Connection conn, int id, String name,int price,int catid) {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO products (id, name,price,catid) VALUES (? , ? , ? , ?)")) {
+            ps.setInt(1, id);
+            ps.setString(2, name);
+            ps.setInt(3, price);
+            ps.setInt(4, catid);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Product inserted successfully!" : "Insertion failed.");
+        } catch (SQLException e) {
+            System.out.println("Insert Error: " + e.getMessage());
+        }
+    }
+
+    private void updateProducts(Connection conn, int id, String name) {
+        try (PreparedStatement ps = conn.prepareStatement("UPDATE products SET name = ? WHERE id = ?")) {
+            ps.setString(1, name);
+            ps.setInt(2, id);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Product updated successfully!" : "Update failed.");
+        } catch (SQLException e) {
+            System.out.println("Update Error: " + e.getMessage());
+        }
+    }
+
+    private void deleteProduct(Connection conn, int id) {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM products WHERE id = ?")) {
+            ps.setInt(1, id);
+            int result = ps.executeUpdate();
+            System.out.println(result > 0 ? "Product deleted successfully!" : "Deletion failed.");
+        } catch (SQLException e) {
+            System.out.println("Delete Error: " + e.getMessage());
+        }
+    }
+
+    private void closeConnection(Connection conn) {
+        try {
+            if (conn != null) conn.close();
+            System.out.println("Connection closed.");
+        } catch (SQLException e) {
+            System.out.println("Error closing connection: " + e.getMessage());
+        }
+    }
+}
+*/
+
+import org.springframework.boot.SpringApplication;//launches the springboot application
+import org.springframework.boot.autoconfigure.SpringBootApplication;//adds all annotations
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@SpringBootApplication
+
+public class Main {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+
+    }
+
 }
