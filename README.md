@@ -131,7 +131,7 @@ Product CRUD operations
 2.Duplicate names not allowed  
 3.Url error not allowed  
 4.Any missing parameters in the url not allowed  
-5.Id insertion is automatic , hence if ID specified not allowed while post
+5.Id insertion is automatic , hence if ID specified not allowed while post request
 
 
 ### Products  
@@ -140,16 +140,8 @@ Product CRUD operations
 3.Category ID must exist  
 4.Duplicate names not allowed    
 5.Any missing parameters in the url not allowed  
-6.Id insertion is automatic , hence if ID specified not allowed while post  
-
-## H2 Console Access
-When using H2:
-
-Access H2 console at: http://localhost:8080/h2-console  
-Use these settings:  
-JDBC URL: jdbc:h2:mem:testdb  
-Username: sa  
-Password: [leave blank]  
+6.Id insertion is automatic , hence if ID specified not allowed while post request
+ 
 
 ## Technologies Used  
 Spring Boot  
