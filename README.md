@@ -156,3 +156,5 @@ Intellij IDE
 Java 17 or higher  
 Maven 4.0.0 or higher  
 MySQL (if using MySQL configuration)
+
+## After deployment the url where app is accessible is https://project-production-096c.up.railway.app
