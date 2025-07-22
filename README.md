@@ -158,3 +158,14 @@ Maven 4.0.0 or higher
 MySQL (if using MySQL configuration)
 
 ## After deployment the url where app is accessible is https://project-production-096c.up.railway.app
+## Example :
+Post Request for categories:
+{
+"name":"Electronics"
+}
+Post Request for products:
+{
+"name":"Laptop",
+"price":10000,
+"catid":1
+}
