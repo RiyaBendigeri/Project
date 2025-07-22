@@ -1,3 +1,9 @@
+//custom exception
+//documentation
+//service model->data layer validations,business logic
+
+//unit test->data validate,exceptions,
+
 package org.example.controller;
 
 import org.example.model.Categories;
