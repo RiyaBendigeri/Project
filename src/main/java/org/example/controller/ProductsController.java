@@ -168,9 +168,14 @@ public class ProductsController {
                     return ResponseEntity.status(400)
                             .body("Product name cannot be empty");
                 }
-                if (repo.existsByName(newName) && !product.getName().equals(newName)) {
+//                if (repo.existsByName(newName) && !product.getName().equals(newName)) {
+//                    return ResponseEntity.status(409)
+//                            .body("Product with name '" + newName + "' already exists");
+//                }
+                if (repo.existsByNameIgnoreCase(newName.trim()) &&
+                        !product.getName().equalsIgnoreCase(newName.trim())) {
                     return ResponseEntity.status(409)
-                            .body("Product with name '" + newName + "' already exists");
+                            .body("Product with name '" + newName + "' already exists"); // Status: 409 Conflict
                 }
                 product.setName(newName.trim());
             }

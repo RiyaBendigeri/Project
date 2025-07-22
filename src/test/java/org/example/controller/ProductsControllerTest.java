@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc//mockmvc is needed so that no need to start an actual HTTP server
 public class ProductsControllerTest {
 
     @Autowired
@@ -192,7 +192,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().string("Product with name 'Laptop' already exists"));
     }
-
+//patch:id but when price is invalid
     @Test
     void updateProduct_WithInvalidPrice_ReturnsBadRequest() throws Exception {
         Products product = new Products();
@@ -207,7 +207,7 @@ public class ProductsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Price must be greater than 0"));
     }
-
+//patch when invalid catid which does not exist taht is given
     @Test
     void updateProduct_WithInvalidCategoryId_ReturnsNotFound() throws Exception {
         Products product = new Products();

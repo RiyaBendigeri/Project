@@ -33,13 +33,14 @@ public class CategoryControllerTest {
     }
 
     // GET ALL CATEGORIES TESTS
+    //get all categories when they dont exist
     @Test
     void getAllCategories_WhenNoCategories_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/api/categories"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("No categories found"));
     }
-
+//get all categories when they exist
     @Test
     void getAllCategories_WhenCategoriesExist_ReturnsCategories() throws Exception {
         // Create test data
@@ -58,6 +59,7 @@ public class CategoryControllerTest {
     }
 
     // GET CATEGORY BY ID TESTS
+    //get category by id when it exists
     @Test
     void getCategory_WhenExists_ReturnsCategory() throws Exception {
         Categories category = new Categories();
@@ -68,7 +70,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Electronics"));
     }
-
+    //get category by id when it doesnt exists
     @Test
     void getCategory_WhenNotExists_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/api/categories/999"))
@@ -77,6 +79,7 @@ public class CategoryControllerTest {
     }
 
     // POST CATEGORY TESTS
+    //post test when its created
     @Test
     void postCategory_WithValidData_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/api/categories")
@@ -85,7 +88,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Electronics"));
     }
-
+//post test with some extra fields
     @Test
     void postCategory_WithExtraFields_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/categories")
@@ -94,7 +97,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid request. Only 'name' field is allowed. Extra fields are not permitted."));
     }
-
+//post with empty name
     @Test
     void postCategory_WithEmptyName_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/categories")
@@ -103,7 +106,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Category name cannot be empty"));
     }
-
+//post with name which already exists
     @Test
     void postCategory_WithDuplicateName_ReturnsConflict() throws Exception {
         // First create a category
@@ -120,6 +123,7 @@ public class CategoryControllerTest {
     }
 
     // PATCH CATEGORY TESTS
+    //patch when update will return a valid data
     @Test
     void patchCategory_WithValidData_ReturnsOk() throws Exception {
         // First create a category
@@ -133,7 +137,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Electronics"));
     }
-
+//patch when update will duplicate the name
     @Test
     void patchCategory_WithDuplicateName_ReturnsConflict() throws Exception {
         // Create two categories
@@ -152,7 +156,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().string("Category with name 'Electronics' already exists"));
     }
-
+    //patch when update will give rise to empty name
     @Test
     void patchCategory_WithEmptyName_ReturnsBadRequest() throws Exception {
         Categories category = new Categories();
@@ -168,6 +172,7 @@ public class CategoryControllerTest {
 
     // DELETE CATEGORY TESTS
     @Test
+    //delete when it exists
     void deleteCategory_WhenExists_ReturnsOk() throws Exception {
         Categories category = new Categories();
         category.setName("Electronics");
@@ -177,7 +182,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Category successfully deleted"));
     }
-
+//delete when that id does not exist
     @Test
     void deleteCategory_WhenNotExists_ReturnsNotFound() throws Exception {
         mockMvc.perform(delete("/api/categories/999"))
