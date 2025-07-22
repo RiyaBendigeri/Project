@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ProductsRepository extends JpaRepository<Products,Integer> {
     boolean existsByName(String name);
     boolean existsById(int id);
+
+    boolean existsByNameIgnoreCase(String trim);
 }

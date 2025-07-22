@@ -80,10 +80,11 @@ public class ProductsController {
             }
 
             // Check for duplicate product name
-            if (repo.existsByName(name.trim())) {
+            if (repo.existsByNameIgnoreCase(name.trim())) {
                 return ResponseEntity.status(409)
                         .body("Product with name '" + name + "' already exists");
             }
+
 
             // Validate price
             int price;
