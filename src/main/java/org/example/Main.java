@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 public class Main {
-    List<Products>products = new ArrayList<>();
+    List<Product>products = new ArrayList<>();
 
 
-    public List<Products> getPList()
+    public List<Product> getPList()
     {
         return products;
     }
-    public void insertP(Products obj)
+    public void insertP(Product obj)
     {
-        for (Categories categories : category) {
+        for (Category categories : category) {
             if(categories.getID() == obj.getcatID())
             {
 
@@ -31,7 +31,7 @@ public class Main {
     {
         System.out.println();
         System.out.println(" ID "+ "  Name  " + " Price " + " Category ID " );
-        for (Products obj : products) {
+        for (Product obj : products) {
             if(obj.getID() > 0)
             {
                 System.out.println("  "+ obj.getID() + "  " + obj.getName() + "  " + obj.getPrice() +  "       " + obj.getcatID()  );
@@ -44,7 +44,7 @@ public class Main {
         String updatevalue = sc.nextLine();
 
 
-        for (Products obj : products) {
+        for (Product obj : products) {
             if (obj.getID() == id) {
                 if (updatevalue.equals("Name")) {
                     sc = new Scanner(System.in);
@@ -61,7 +61,7 @@ public class Main {
                 } else if (updatevalue == "catID") {
                     sc = new Scanner(System.in);
                     int catnew = sc.nextInt();
-                    for (Categories cat : category) {
+                    for (Category cat : category) {
                         {
                             if (cat.getID() == catnew) {
                                 obj.setcatID(catnew);
@@ -86,14 +86,14 @@ public class Main {
 
 
     //here store all our categories
-    List<Categories>category = new ArrayList<>();
+    List<Category>category = new ArrayList<>();
 
     //operations defined
-    public List<Categories> getList()
+    public List<Category> getList()
     {
         return category;
     }
-    public void insert(Categories obj)
+    public void insert(Category obj)
     {
         category.add(obj);
     }
@@ -101,7 +101,7 @@ public class Main {
     {
         System.out.println();
         System.out.println(" ID "+ "  Name  ");
-        for (Categories obj : category) {
+        for (Category obj : category) {
             if(obj.getID() > 0)
             {
                 System.out.println(obj.getID() + "  " + obj.getName());
@@ -111,7 +111,7 @@ public class Main {
     }
     public void update(int id,String newcat)
     {
-        for (Categories obj : category) {
+        for (Category obj : category) {
             if(obj.getID() == id)
             {
                 obj.setName(newcat);
@@ -125,7 +125,7 @@ public class Main {
     }
     public void delete(int id)
     {
-        for (Categories obj : category) {
+        for (Category obj : category) {
             if(obj.getID() == id)
             {
                 obj.deleteobj(id);
@@ -137,13 +137,13 @@ public class Main {
     }
     public static void main(String[] args) {
         Main obj = new Main();
-        Categories catobj = new Categories(1,"Electronics");
+        Category catobj = new Category(1,"Electronics");
         obj.insert(catobj);
-        catobj = new Categories(2,"Clothing");
+        catobj = new Category(2,"Clothing");
         obj.insert(catobj);
-        catobj = new Categories(3,"Books");
+        catobj = new Category(3,"Books");
         obj.insert(catobj);
-        catobj = new Categories(4,"Home Appliances");
+        catobj = new Category(4,"Home Appliances");
         obj.insert(catobj);
         obj.display();
 
@@ -151,13 +151,13 @@ public class Main {
         obj.update(10,"Brands");
         obj.delete(1);
 
-        Products p= new Products(1,"Laptop",9000, 1);
+        Product p= new Product(1,"Laptop",9000, 1);
         obj.insertP(p);
         //obj.displayP();
-        p= new Products(2,"Tshirt",900, 2);
+        p= new Product(2,"Tshirt",900, 2);
         obj.insertP(p);
         //obj.displayP();
-        p= new Products(3,"The one ",250, 3);
+        p= new Product(3,"The one ",250, 3);
         obj.insertP(p);
         obj.displayP();
         obj.updateP(3);
