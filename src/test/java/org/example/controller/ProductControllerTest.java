@@ -245,6 +245,7 @@
 package org.example.controller;
 
 import org.example.model.Product;
+import org.example.services.CategoryService;
 import org.example.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,7 +260,16 @@ import java.util.Map;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+/**
+ * Unit test for {@link ProductController} using Spring's {@link WebMvcTest}.
+ *
+ * This test class loads only the web layer components related to ProductController,
+ * without starting the full Spring context.
+ *
+ * Uses {@link MockMvc} to simulate HTTP requests and verify responses.
+ * The {@link ProductService} dependency is mocked with Mockito using {@link MockBean},
+ * allowing isolation of the controller layer from the service and database.
+ */
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 

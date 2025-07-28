@@ -13,7 +13,11 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * Unit tests for {@link org.example.services.ProductService} using JUnit 5 and Mockito.
+ *
+ * <p>Verifies product CRUD operations, input validation, and exception handling by mocking repository data.</p>
+ */
 class ProductServiceTest {
 
     @Mock

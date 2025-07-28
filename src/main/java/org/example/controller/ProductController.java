@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+/**
+ * REST controller for managing products.
+ * Provides endpoints to create, read, update, and delete products.
+ */
 @RestController
+
 @RequestMapping("/api")
+
 public class ProductController {
     @Autowired
     private ProductService productService;

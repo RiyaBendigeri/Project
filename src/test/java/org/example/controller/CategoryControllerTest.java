@@ -294,7 +294,9 @@ class CategoryControllerTest {
         when(categoryService.getCategoryById(999)).thenThrow(new org.example.exception.CustomException.ResourceNotFoundException("Category with ID 999 not found"));
 
         mockMvc.perform(get("/api/categories/999"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Category with ID 999 not found"))
+                .andExpect(jsonPath("$.status").value(404));
     }
 
     // POST CATEGORY TESTS
@@ -329,6 +331,7 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Electronics\",\"price\":100}"))
                 .andExpect(status().isBadRequest());
+
     }
     /**
      * Test POST /api/categories with missing required "name" field.
@@ -341,7 +344,10 @@ class CategoryControllerTest {
         mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Name is required"))
+                .andExpect(jsonPath("$.status").value(400));
+
     }
     /**
      * Test PATCH /api/categories/{id} with valid update data.
@@ -374,7 +380,10 @@ class CategoryControllerTest {
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Name is required for update"))
+                .andExpect(jsonPath("$.status").value(400));
+
     }
 
     // DELETE CATEGORY TESTS
@@ -406,7 +415,10 @@ class CategoryControllerTest {
                 .when(categoryService).deleteCategory(999);
 
         mockMvc.perform(delete("/api/categories/999"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Category with ID 999 not found"))
+                .andExpect(jsonPath("$.status").value(404));
+
     }
 
     // Additional: Category update duplicate and empty name error
@@ -425,7 +437,9 @@ class CategoryControllerTest {
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Books\"}"))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.message").value("Category with name 'Books' already exists"))
+                .andExpect(jsonPath("$.status").value(409));
     }
     /**
      * Test PATCH /api/categories/{id} with empty "name" field.
@@ -442,7 +456,9 @@ class CategoryControllerTest {
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\"}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+         .andExpect(jsonPath("$.message").value("Category name cannot be empty"))
+                .andExpect(jsonPath("$.status").value(400));
     }
     /**
      * Test POST /api/categories with a duplicate category name.
@@ -459,6 +475,8 @@ class CategoryControllerTest {
         mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Electronics\"}"))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.message").value("Category with name 'Electronics' already exists"))
+                .andExpect(jsonPath("$.status").value(409));
     }
 }

@@ -10,7 +10,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Service layer handling business logic, validation, and data operations for {@link Product} entities.
+ *
+ * <p>
+ * This class interacts with the {@link ProductRepository} and {@link CategoryRepository} to perform
+ * product creation, retrieval, update, and deletion, enforcing business rules and data integrity
+ * through validation logic and custom exceptions.
+ * </p>
+ *
+ * <p>
+ * Major responsibilities include:
+ * <ul>
+ *   <li>Retrieving all products or a product by its unique identifier</li>
+ *   <li>Creating products while checking for duplicate names, valid category IDs, and input constraints</li>
+ *   <li>Updating product fields with comprehensive validation</li>
+ *   <li>Safely deleting products, ensuring they exist before removal</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * All validation and error scenarios result in the throwing of specific
+ * {@link org.example.exception.CustomException} subclasses to aid in diagnostics and client feedback.
+ * </p>
+ *
+ * @see org.example.model.Product
+ * @see org.example.repository.ProductRepository
+ * @see org.example.repository.CategoryRepository
+ * @see org.example.exception.CustomException
+ */
 @Service
 public class ProductService {
 
@@ -162,7 +190,7 @@ public class ProductService {
                     throw new CustomException.ResourceNotFoundException(
                             "Category with ID " + newCatId + " does not exist");
                 }
-                //product.setcategoryID(newCatId);
+                product.setcategoryID(newCatId);
             } catch (NumberFormatException e) {
                 throw new CustomException.ValidationException("Invalid category ID format");
             }

@@ -12,7 +12,13 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * Unit tests for {@link org.example.services.CategoryService} using Mockito and JUnit 5.
+ *
+ * <p>Verifies CRUD operations, input validation, and exception handling for categories.</p>
+ *
+ * <p>Mocks the repository to control data and test all major business logic cases.</p>
+ */
 class CategoryServiceTest {
 
     @Mock
