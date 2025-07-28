@@ -31,7 +31,7 @@ import org.springframework.stereotype.Repository;
  * @see Product
  */
 @Repository//spring repo component
-public interface ProductRepository extends JpaRepository<Product,Integer> {
+public interface productRepository extends JpaRepository<Product,Integer> {
     //custom query methods
     /**
      * Checks if a category with the exact given name exists.
@@ -57,10 +57,10 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     /**
      * Checks if a product with given category id exists, ignoring case.
      *
-     * @param categoryID the id of the category
-     * @return true if a product with the specified categoryID exists, false otherwise
+     * @param categoryId the id of the category
+     * @return true if a product with the specified categoryId exists, false otherwise
      */
-    boolean existsByCategoryID(int categoryID);
+    boolean existsBycategoryId(int categoryId);
 
 }
 //jpa will create queries based on the method name

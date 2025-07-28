@@ -12,7 +12,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  * It uses @RestControllerAdvice to intercept exceptions thrown by controllers globally.
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class globalexceptionHandler {
     /**
      * Handles ResourceNotFoundException and returns a 404 Not Found response.
      *
@@ -20,9 +20,9 @@ public class GlobalExceptionHandler {
      * @return a ResponseEntity containing the error details and HTTP status 404
      */
 
-    @ExceptionHandler(CustomException.ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(CustomException.ResourceNotFoundException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    @ExceptionHandler(customException.ResourceNotFoundException.class)
+    public ResponseEntity<errorResponse> handleNotFound(customException.ResourceNotFoundException ex) {
+        errorResponse error = new errorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
     /**
@@ -31,9 +31,9 @@ public class GlobalExceptionHandler {
      * @param ex the ValidationException instance
      * @return a ResponseEntity containing the error details and HTTP status 400
      */
-    @ExceptionHandler(CustomException.ValidationException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(CustomException.ValidationException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    @ExceptionHandler(customException.ValidationException.class)
+    public ResponseEntity<errorResponse> handleValidation(customException.ValidationException ex) {
+        errorResponse error = new errorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
     /**
@@ -42,9 +42,9 @@ public class GlobalExceptionHandler {
      * @param ex the DuplicateResourceException instance
      * @return a ResponseEntity containing the error details and HTTP status 409
      */
-    @ExceptionHandler(CustomException.DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicate(CustomException.DuplicateResourceException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
+    @ExceptionHandler(customException.DuplicateResourceException.class)
+    public ResponseEntity<errorResponse> handleDuplicate(customException.DuplicateResourceException ex) {
+        errorResponse error = new errorResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
@@ -56,9 +56,9 @@ public class GlobalExceptionHandler {
      * @return a ResponseEntity containing the error details and HTTP status 404
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoHandler(NoHandlerFoundException ex) {
+    public ResponseEntity<errorResponse> handleNoHandler(NoHandlerFoundException ex) {
         String message = "No resource found at " + ex.getRequestURL();
-        ErrorResponse error = new ErrorResponse(message, 404);
+        errorResponse error = new errorResponse(message, 404);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
     /**
@@ -69,8 +69,8 @@ public class GlobalExceptionHandler {
      * @return a ResponseEntity containing the error details and HTTP status 500
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        ErrorResponse error = new ErrorResponse("Something went wrong: " + ex.getMessage(), 500);
+    public ResponseEntity<errorResponse> handleGeneric(Exception ex) {
+        errorResponse error = new errorResponse("Something went wrong: " + ex.getMessage(), 500);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

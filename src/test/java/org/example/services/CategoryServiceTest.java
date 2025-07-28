@@ -1,9 +1,9 @@
 //12 cases for this categoryservice
 package org.example.services;
 
-import org.example.exception.CustomException;
+import org.example.exception.customException;
 import org.example.model.Category;
-import org.example.repository.CategoryRepository;
+import org.example.repository.categoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -13,7 +13,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 /**
- * Unit tests for {@link org.example.services.CategoryService} using Mockito and JUnit 5.
+ * Unit tests for {@link categoryService} using Mockito and JUnit 5.
  *
  * <p>Verifies CRUD operations, input validation, and exception handling for categories.</p>
  *
@@ -22,10 +22,10 @@ import static org.mockito.Mockito.*;
 class CategoryServiceTest {
 
     @Mock
-    private CategoryRepository repo;
+    private categoryRepository repo;
 
     @InjectMocks
-    private CategoryService service;
+    private categoryService service;
 
     @BeforeEach
     void setup() {
@@ -80,7 +80,7 @@ class CategoryServiceTest {
     void getCategoryById_NotExists_ThrowsResourceNotFoundException() {
         when(repo.findById(23)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> service.getCategoryById(23));
         assertEquals("Category with ID 23 not found", ex.getMessage());
     }
@@ -92,7 +92,7 @@ class CategoryServiceTest {
      */
     @Test
     void createCategory_EmptyName_ThrowsValidation() {
-        Exception ex = assertThrows(CustomException.ValidationException.class,
+        Exception ex = assertThrows(customException.ValidationException.class,
                 () -> service.createCategory(""));
         assertEquals("Category name cannot be empty", ex.getMessage());
     }
@@ -107,7 +107,7 @@ class CategoryServiceTest {
     void createCategory_Duplicate_ThrowsDuplicateResource() {
         when(repo.existsByNameIgnoreCase("Electronics")).thenReturn(true);
 
-        Exception ex = assertThrows(CustomException.DuplicateResourceException.class,
+        Exception ex = assertThrows(customException.DuplicateResourceException.class,
                 () -> service.createCategory("Electronics"));
         assertEquals("Category with name 'Electronics' already exists", ex.getMessage());
     }
@@ -141,7 +141,7 @@ class CategoryServiceTest {
     void updateCategory_CategoryNotExists_ThrowsResourceNotFound() {
         when(repo.findById(6)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> service.updateCategory(6, "NewName"));
         assertEquals("Category with ID 6 not found", ex.getMessage());
     }
@@ -157,7 +157,7 @@ class CategoryServiceTest {
         cat.setName("Electronics");
         when(repo.findById(5)).thenReturn(Optional.of(cat));
 
-        Exception ex = assertThrows(CustomException.ValidationException.class,
+        Exception ex = assertThrows(customException.ValidationException.class,
                 () -> service.updateCategory(5, "  "));
         assertEquals("Category name cannot be empty", ex.getMessage());
     }
@@ -176,7 +176,7 @@ class CategoryServiceTest {
         when(repo.findById(4)).thenReturn(Optional.of(cat));
         when(repo.existsByNameIgnoreCase("Books")).thenReturn(true);
 
-        Exception ex = assertThrows(CustomException.DuplicateResourceException.class,
+        Exception ex = assertThrows(customException.DuplicateResourceException.class,
                 () -> service.updateCategory(4, "Books"));
         assertEquals("Category with name 'Books' already exists", ex.getMessage());
     }
@@ -213,7 +213,7 @@ class CategoryServiceTest {
     void deleteCategory_NotExists_ThrowsResourceNotFound() {
         when(repo.existsById(99)).thenReturn(false);
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> service.deleteCategory(99));
         assertEquals("Category with ID 99 not found", ex.getMessage());
     }

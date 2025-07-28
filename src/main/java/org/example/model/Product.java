@@ -23,7 +23,7 @@ public class Product {
     private int price;
     /** The ID of the category this product belongs to. */
     @Column
-    private int categoryID;
+    private int categoryId;
     /**
      * Default no-argument constructor.
      */
@@ -34,14 +34,14 @@ public class Product {
      * @param id the unique identifier of the product
      * @param name the name of the product
      * @param price the price of the product
-     * @param categoryID the ID of the category the product belongs to
+     * @param categoryId the ID of the category the product belongs to
      */
-    public Product(int id, String name, int price, int categoryID)
+    public Product(int id, String name, int price, int categoryId)
     {
         this.id=id;
         this.name=name;
         this.price=price;
-        this.categoryID=categoryID;
+        this.categoryId=categoryId;
 
     }
     /**
@@ -76,9 +76,9 @@ public class Product {
      *
      * @return the category ID
      */
-    public int getcategoryID()
+    public int getcategoryId()
     {
-        return(this.categoryID);
+        return(this.categoryId);
     }
     /**
      * Sets the product's id.
@@ -110,11 +110,11 @@ public class Product {
     /**
      * Sets the category ID for this product.
      *
-     * @param categoryID the new category ID
+     * @param categoryId the new category Id
      */
-    public void setcategoryID(int categoryID)
+    public void setcategoryId(int categoryId)
     {
-        this.categoryID=categoryID;
+        this.categoryId=categoryId;
     }
 
 }

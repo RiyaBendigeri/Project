@@ -4,7 +4,7 @@ package org.example.exception;
  * to represent specific error conditions related to validation, resource existence,
  * and duplication.
  */
-public class CustomException {
+public class customException {
     /**
      * Exception thrown when input validation fails or invalid data is encountered.
      */

@@ -2,7 +2,7 @@
 //package org.example.controller;
 //
 //import org.example.model.Category;
-//import org.example.repository.CategoryRepository;
+//import org.example.repository.categoryRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@
 //    private MockMvc mockMvc;
 //
 //    @Autowired
-//    private CategoryRepository categoryRepository;
+//    private categoryRepository categoryRepository;
 //
 //    @BeforeEach
 //    void setUp() {
@@ -191,8 +191,9 @@
 //}
 package org.example.controller;
 
+import org.example.exception.customException;
 import org.example.model.Category;
-import org.example.services.CategoryService;
+import org.example.services.categoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest; //Spring Boot test annotation used for testing only the controllers.
@@ -201,36 +202,34 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /**
- * Unit test for {@link CategoryController} using Spring's {@link WebMvcTest}.
+ * Unit test for {@link categoryController} using Spring's {@link WebMvcTest}.
  *
- * This test class loads only the web layer components related to CategoryController,
+ * This test class loads only the web layer components related to categoryController,
  * without starting the full Spring context.
  *
  * Uses {@link MockMvc} to simulate HTTP requests and verify responses.
- * The {@link CategoryService} dependency is mocked with Mockito using {@link MockBean},
+ * The {@link categoryService} dependency is mocked with Mockito using {@link MockBean},
  * allowing isolation of the controller layer from the service and database.
  */
-@WebMvcTest(CategoryController.class)
+@WebMvcTest(categoryController.class)
 class CategoryControllerTest {
 
     @Autowired// Injects a MockMvc instance for simulating HTTP requests to the controller
     private MockMvc mockMvc;
 
-    @MockBean// Creates a Mockito mock of CategoryService and puts it into the Spring context
-    private CategoryService categoryService;
+    @MockBean// Creates a Mockito mock of categoryService and puts it into the Spring context
+    private categoryService categoryService;
 
     // GET ALL CATEGORIES TESTS
     /**
      * Test case for GET /api/categories when there are no categories.
      *
-     * Mocks the CategoryService to return an empty list.
+     * Mocks the categoryService to return an empty list.
 
      * Expects HTTP 200 OK status and a JSON response with a message indicating no categories exist.
      *
@@ -291,7 +290,7 @@ class CategoryControllerTest {
      */
     @Test
     void getCategory_whenNotExists_returnsNotFound() throws Exception {
-        when(categoryService.getCategoryById(999)).thenThrow(new org.example.exception.CustomException.ResourceNotFoundException("Category with ID 999 not found"));
+        when(categoryService.getCategoryById(999)).thenThrow(new customException.ResourceNotFoundException("Category with ID 999 not found"));
 
         mockMvc.perform(get("/api/categories/999"))
                 .andExpect(status().isNotFound())
@@ -411,7 +410,7 @@ class CategoryControllerTest {
      */
     @Test
     void deleteCategory_whenNotExists_returnsNotFound() throws Exception {
-        doThrow(new org.example.exception.CustomException.ResourceNotFoundException("Category with ID 999 not found"))
+        doThrow(new customException.ResourceNotFoundException("Category with ID 999 not found"))
                 .when(categoryService).deleteCategory(999);
 
         mockMvc.perform(delete("/api/categories/999"))
@@ -431,7 +430,7 @@ class CategoryControllerTest {
      */
     @Test
     void patchCategory_withDuplicateName_returnsConflict() throws Exception {
-        doThrow(new org.example.exception.CustomException.DuplicateResourceException("Category with name 'Books' already exists"))
+        doThrow(new customException.DuplicateResourceException("Category with name 'Books' already exists"))
                 .when(categoryService).updateCategory(1, "Books");
 
         mockMvc.perform(patch("/api/categories/1")
@@ -450,7 +449,7 @@ class CategoryControllerTest {
      */
     @Test
     void patchCategory_withEmptyName_returnsBadRequest() throws Exception {
-        doThrow(new org.example.exception.CustomException.ValidationException("Category name cannot be empty"))
+        doThrow(new customException.ValidationException("Category name cannot be empty"))
                 .when(categoryService).updateCategory(1, "");
 
         mockMvc.perform(patch("/api/categories/1")
@@ -469,7 +468,7 @@ class CategoryControllerTest {
      */
     @Test
     void postCategory_withDuplicateName_returnsConflict() throws Exception {
-        doThrow(new org.example.exception.CustomException.DuplicateResourceException("Category with name 'Electronics' already exists"))
+        doThrow(new customException.DuplicateResourceException("Category with name 'Electronics' already exists"))
                 .when(categoryService).createCategory("Electronics");
 
         mockMvc.perform(post("/api/categories")

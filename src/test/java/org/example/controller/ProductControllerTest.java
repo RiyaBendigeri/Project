@@ -3,8 +3,8 @@
 //
 //import org.example.model.Category;
 //import org.example.model.Product;
-//import org.example.repository.CategoryRepository;
-//import org.example.repository.ProductRepository;
+//import org.example.repository.categoryRepository;
+//import org.example.repository.productRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@
 //    private MockMvc mockMvc;
 //
 //    @Autowired
-//    private ProductRepository productRepository;
+//    private productRepository productRepository;
 //
 //    @Autowired
-//    private CategoryRepository categoryRepository;
+//    private categoryRepository categoryRepository;
 //
 //    private Category testCategory;
 //
@@ -245,8 +245,7 @@
 package org.example.controller;
 
 import org.example.model.Product;
-import org.example.services.CategoryService;
-import org.example.services.ProductService;
+import org.example.services.productService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -261,23 +260,23 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /**
- * Unit test for {@link ProductController} using Spring's {@link WebMvcTest}.
+ * Unit test for {@link productController} using Spring's {@link WebMvcTest}.
  *
- * This test class loads only the web layer components related to ProductController,
+ * This test class loads only the web layer components related to productController,
  * without starting the full Spring context.
  *
  * Uses {@link MockMvc} to simulate HTTP requests and verify responses.
- * The {@link ProductService} dependency is mocked with Mockito using {@link MockBean},
+ * The {@link productService} dependency is mocked with Mockito using {@link MockBean},
  * allowing isolation of the controller layer from the service and database.
  */
-@WebMvcTest(ProductController.class)
+@WebMvcTest(productController.class)
 class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductService productService; // This is a mock!
+    private productService productService; // This is a mock!
 
     // Test for "/get" when products is empty
     /**
@@ -350,7 +349,7 @@ class ProductControllerTest {
 //    @Test
 //    void getProduct_WhenNotExists_ReturnsNotFound() throws Exception {
 //        when(productService.getProductById(999)).thenThrow(
-//                new org.example.exception.CustomException.ResourceNotFoundException("Product with ID 999 not found")
+//                new org.example.exception.customException.ResourceNotFoundException("Product with ID 999 not found")
 //        );
 //
 //        mockMvc.perform(get("/api/products/999"))
@@ -375,14 +374,14 @@ class ProductControllerTest {
         Map<String, Object> requestBody = Map.of(
                 "name", "Laptop",
                 "price", 1000,
-                "categoryID", 1
+                "categoryId", 1
         );
 
         when(productService.createProduct(anyMap())).thenReturn(product);
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryID\":1}"))
+                        .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryId\":1}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Laptop"))
                 .andExpect(jsonPath("$.price").value(1000));
@@ -392,12 +391,12 @@ class ProductControllerTest {
 //        @Test
 //        void addProduct_WithDuplicateName_ReturnsConflict() throws Exception {
 //            when(productService.createProduct(anyMap())).thenThrow(
-//                    new org.example.exception.CustomException.DuplicateResourceException("Product with name 'Laptop' already exists")
+//                    new org.example.exception.customException.DuplicateResourceException("Product with name 'Laptop' already exists")
 //            );
 //
 //            mockMvc.perform(post("/api/products")
 //                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryID\":1}"))
+//                            .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryId\":1}"))
 //                    .andExpect(status().isConflict())
 //                    .andExpect(content().string("Product with name 'Laptop' already exists"));
 //        }
@@ -446,7 +445,7 @@ class ProductControllerTest {
     // Test DELETE when NOT exists
 //    @Test
 //    void deleteProduct_WhenNotExists_ReturnsNotFound() throws Exception {
-//        doThrow(new org.example.exception.CustomException.ResourceNotFoundException("Product with ID 999 not found, cannot delete"))
+//        doThrow(new org.example.exception.customException.ResourceNotFoundException("Product with ID 999 not found, cannot delete"))
 //                .when(productService).deleteProduct(999);
 //
 //        mockMvc.perform(delete("/api/products/999"))

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Repository;
  * @see Category
  */
 @Repository//spring repo component
-public interface CategoryRepository extends JpaRepository<Category,Integer> {//integer is the type of the primary key//category is entity that this repo manages
+public interface categoryRepository extends JpaRepository<Category,Integer> {//integer is the type of the primary key//category is entity that this repo manages
     // Custom query methods
     /**
      * Checks if a category with the given name exists, ignoring case.

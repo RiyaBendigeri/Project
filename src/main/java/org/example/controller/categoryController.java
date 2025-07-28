@@ -1,8 +1,8 @@
 package org.example.controller;
 
-import org.example.exception.CustomException;
+import org.example.exception.customException;
 import org.example.model.Category;
-import org.example.services.CategoryService;
+import org.example.services.categoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +18,9 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/api")
-public class CategoryController {
+public class categoryController {
     @Autowired
-    private CategoryService CategoryService;
+    private categoryService categoryService;
 /**
  * Retrieves all categories.
  * If no categories are found, returns a message indicating this.
@@ -28,7 +28,7 @@ public class CategoryController {
     @GetMapping("/categories")
     //gets all categories
     public ResponseEntity<?> getAllCategories() {
-        List<Category> categories = CategoryService.getAllCategories();
+        List<Category> categories = categoryService.getAllCategories();
         if (categories.isEmpty()) {
             return ResponseEntity.ok(Map.of("message", "No categories available to display"));
         }
@@ -42,7 +42,7 @@ public class CategoryController {
      */
     @GetMapping("/categories/{id}")
     public ResponseEntity<?> getCategory(@PathVariable int id) {
-        Category category = CategoryService.getCategoryById(id);
+        Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
     /**
@@ -52,7 +52,7 @@ public class CategoryController {
     public ResponseEntity<?> postCategory(@RequestBody Map<String, String> requestBody) {
 
         if (!requestBody.containsKey("name")) {
-            throw new CustomException.ValidationException("Name is required");
+            throw new customException.ValidationException("Name is required");
         }
         Set<String> allowedFields = Set.of("name");
 
@@ -63,7 +63,7 @@ public class CategoryController {
                 .body("Invalid request. Only 'name' field is allowed. Extra fields are not permitted.");
     }
         String name = (String) requestBody.get("name");
-        Category saved = CategoryService.createCategory(name);
+        Category saved = categoryService.createCategory(name);
         return ResponseEntity.status(201).body(saved);
     }
 /**
@@ -73,10 +73,10 @@ public class CategoryController {
     public ResponseEntity<?> updateCategory(@PathVariable int id, @RequestBody Map<String, String> updates) {
 
         if (!updates.containsKey("name")) {
-            throw new CustomException.ValidationException("Name is required for update");
+            throw new customException.ValidationException("Name is required for update");
         }
         String newName = (String) updates.get("name");
-        Category updated = CategoryService.updateCategory(id, newName);
+        Category updated = categoryService.updateCategory(id, newName);
         return ResponseEntity.ok(updated);
     }
 /**
@@ -84,7 +84,7 @@ public class CategoryController {
  */
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable int id) {
-        CategoryService.deleteCategory(id);
+        categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category successfully deleted");
     }
 }

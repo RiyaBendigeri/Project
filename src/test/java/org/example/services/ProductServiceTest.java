@@ -1,10 +1,10 @@
 package org.example.services;
 
-import org.example.exception.CustomException;
+import org.example.exception.customException;
 import org.example.model.Product;
 import org.example.model.Category;
-import org.example.repository.CategoryRepository;
-import org.example.repository.ProductRepository;
+import org.example.repository.categoryRepository;
+import org.example.repository.productRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -14,20 +14,20 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 /**
- * Unit tests for {@link org.example.services.ProductService} using JUnit 5 and Mockito.
+ * Unit tests for {@link productService} using JUnit 5 and Mockito.
  *
  * <p>Verifies product CRUD operations, input validation, and exception handling by mocking repository data.</p>
  */
 class ProductServiceTest {
 
     @Mock
-    private ProductRepository productsRepo;
+    private productRepository productsRepo;
 
     @Mock
-    private CategoryRepository categoryRepo;
+    private categoryRepository categoryRepo;
 
     @InjectMocks
-    private ProductService productService;
+    private productService productService;
 
     private Category testCategory;
 
@@ -51,12 +51,12 @@ class ProductServiceTest {
         Product prod1 = new Product();
         prod1.setName("Laptop");
         prod1.setPrice(1000);
-        prod1.setcategoryID(1);
+        prod1.setcategoryId(1);
 
         Product prod2 = new Product();
         prod2.setName("Phone");
         prod2.setPrice(500);
-        prod2.setcategoryID(1);
+        prod2.setcategoryId(1);
 
         when(productsRepo.findAll()).thenReturn(List.of(prod1, prod2));
 
@@ -80,7 +80,7 @@ class ProductServiceTest {
         p.setID(5);
         p.setName("Laptop");
         p.setPrice(1000);
-        p.setcategoryID(1);
+        p.setcategoryId(1);
 
         when(productsRepo.findById(5)).thenReturn(Optional.of(p));
 
@@ -100,7 +100,7 @@ class ProductServiceTest {
     void getProductById_NotExists_ThrowsException() {
         when(productsRepo.findById(99)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> productService.getProductById(99));
         assertEquals("Product with ID 99 not found", ex.getMessage());
     }
@@ -116,7 +116,7 @@ class ProductServiceTest {
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Laptop");
         req.put("price", 1000);
-        req.put("categoryID", 1);
+        req.put("categoryId", 1);
 
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
         when(categoryRepo.existsById(1)).thenReturn(true);
@@ -124,14 +124,14 @@ class ProductServiceTest {
         Product p = new Product();
         p.setName("Laptop");
         p.setPrice(1000);
-        p.setcategoryID(1);
+        p.setcategoryId(1);
         when(productsRepo.save(any(Product.class))).thenReturn(p);
 
         Product result = productService.createProduct(req);
 
         assertEquals("Laptop", result.getName());
         assertEquals(1000, result.getPrice());
-        assertEquals(1, result.getcategoryID());
+        assertEquals(1, result.getcategoryId());
     }
 
     // CREATE product: duplicate name
@@ -145,11 +145,11 @@ class ProductServiceTest {
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Laptop");
         req.put("price", 500);
-        req.put("categoryID", 1);
+        req.put("categoryId", 1);
 
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(true);
 
-        Exception ex = assertThrows(CustomException.DuplicateResourceException.class,
+        Exception ex = assertThrows(customException.DuplicateResourceException.class,
                 () -> productService.createProduct(req));
         assertEquals("Product with name 'Laptop' already exists", ex.getMessage());
     }
@@ -165,12 +165,12 @@ class ProductServiceTest {
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Laptop");
         req.put("price", 1000);
-        req.put("categoryID", 999);
+        req.put("categoryId", 999);
 
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
         when(categoryRepo.existsById(999)).thenReturn(false);
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> productService.createProduct(req));
         assertEquals("Category with ID 999 does not exist", ex.getMessage());
     }
@@ -186,11 +186,11 @@ class ProductServiceTest {
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Laptop");
         req.put("price", -56);
-        req.put("categoryID", 1);
+        req.put("categoryId", 1);
 
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
 
-        Exception ex = assertThrows(CustomException.ValidationException.class,
+        Exception ex = assertThrows(customException.ValidationException.class,
                 () -> productService.createProduct(req));
         assertEquals("Price must be greater than 0", ex.getMessage());
     }
@@ -200,9 +200,9 @@ class ProductServiceTest {
 //    void createProduct_MissingName_Throws() {
 //        Map<String, Object> req = new HashMap<>();
 //        req.put("price", 1000);
-//        req.put("categoryID", 1);
+//        req.put("categoryId", 1);
 //
-//        Exception ex = assertThrows(CustomException.ValidationException.class,
+//        Exception ex = assertThrows(customException.ValidationException.class,
 //                () -> productService.createProduct(req));
 //        assertEquals("Product name is required", ex.getMessage());
 //    }
@@ -219,7 +219,7 @@ class ProductServiceTest {
         existing.setID(4);
         existing.setName("Laptop");
         existing.setPrice(1000);
-        existing.setcategoryID(1);
+        existing.setcategoryId(1);
 
         when(productsRepo.existsById(4)).thenReturn(true);
         when(productsRepo.findById(4)).thenReturn(Optional.of(existing));
@@ -234,7 +234,7 @@ class ProductServiceTest {
         updated.setID(4);
         updated.setName("Phone");
         updated.setPrice(1500);
-        updated.setcategoryID(1);
+        updated.setcategoryId(1);
 
         when(productsRepo.save(any(Product.class))).thenReturn(updated);
 
@@ -255,7 +255,7 @@ class ProductServiceTest {
         existing.setID(6);
         existing.setName("Laptop");
         existing.setPrice(1000);
-        existing.setcategoryID(1);
+        existing.setcategoryId(1);
 
         when(productsRepo.existsById(6)).thenReturn(true);
         when(productsRepo.findById(6)).thenReturn(Optional.of(existing));
@@ -264,7 +264,7 @@ class ProductServiceTest {
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", "Phone");
 
-        Exception ex = assertThrows(CustomException.DuplicateResourceException.class,
+        Exception ex = assertThrows(customException.DuplicateResourceException.class,
                 () -> productService.updateProduct(6, updates));
         assertEquals("Product with name 'Phone' already exists", ex.getMessage());
     }
@@ -281,7 +281,7 @@ class ProductServiceTest {
         existing.setID(7);
         existing.setName("Laptop");
         existing.setPrice(1000);
-        existing.setcategoryID(1);
+        existing.setcategoryId(1);
 
         when(productsRepo.existsById(7)).thenReturn(true);
         when(productsRepo.findById(7)).thenReturn(Optional.of(existing));
@@ -289,7 +289,7 @@ class ProductServiceTest {
         Map<String, Object> updates = new HashMap<>();
         updates.put("price", -100);
 
-        Exception ex = assertThrows(CustomException.ValidationException.class,
+        Exception ex = assertThrows(customException.ValidationException.class,
                 () -> productService.updateProduct(7, updates));
         assertEquals("Price must be greater than 0", ex.getMessage());
     }
@@ -306,17 +306,17 @@ class ProductServiceTest {
         existing.setID(8);
         existing.setName("Laptop");
         existing.setPrice(1000);
-        existing.setcategoryID(1);
+        existing.setcategoryId(1);
 
         when(productsRepo.existsById(8)).thenReturn(true);
         when(productsRepo.findById(8)).thenReturn(Optional.of(existing));
 
         Map<String, Object> updates = new HashMap<>();
-        updates.put("categoryID", 999);
+        updates.put("categoryId", 999);
 
         when(categoryRepo.existsById(999)).thenReturn(false);
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> productService.updateProduct(8, updates));
         assertEquals("Category with ID 999 does not exist", ex.getMessage());
     }
@@ -346,7 +346,7 @@ class ProductServiceTest {
     void deleteProduct_WhenNotExists_Throws() {
         when(productsRepo.existsById(888)).thenReturn(false);
 
-        Exception ex = assertThrows(CustomException.ResourceNotFoundException.class,
+        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
                 () -> productService.deleteProduct(888));
         assertEquals("Product with ID 888 not found, cannot delete", ex.getMessage());
     }
