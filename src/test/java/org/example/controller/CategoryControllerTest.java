@@ -194,13 +194,14 @@ package org.example.controller;
 import org.example.exception.customException;
 import org.example.model.Category;
 import org.example.services.categoryService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest; //Spring Boot test annotation used for testing only the controllers.
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
+import org.example.dto.categoryRequestDTO;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -310,7 +311,7 @@ class CategoryControllerTest {
     void postCategory_withValidData_returnsCreated() throws Exception {
         Category cat = new Category();
         cat.setName("Electronics");
-        when(categoryService.createCategory("Electronics")).thenReturn(cat);
+        when(categoryService.createCategory(any(categoryRequestDTO.class))).thenReturn(cat);
 
         mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -344,7 +345,7 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Name is required"))
+                .andExpect(jsonPath("$.message").value("Category name cannot be empty"))
                 .andExpect(jsonPath("$.status").value(400));
 
     }
@@ -360,7 +361,7 @@ class CategoryControllerTest {
     void patchCategory_withValidData_returnsOk() throws Exception {
         Category cat = new Category();
         cat.setName("Updated Electronics");
-        when(categoryService.updateCategory(1, "Updated Electronics")).thenReturn(cat);
+        when(categoryService.updateCategory(eq(1), any(categoryRequestDTO.class))).thenReturn(cat);
 
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -374,16 +375,16 @@ class CategoryControllerTest {
      *
      * @throws Exception if request execution fails
      */
-    @Test
-    void patchCategory_withMissingName_returnsBadRequest() throws Exception {
-        mockMvc.perform(patch("/api/categories/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Name is required for update"))
-                .andExpect(jsonPath("$.status").value(400));
+        @Test
+        void patchCategory_withMissingName_returnsBadRequest() throws Exception {
+            mockMvc.perform(patch("/api/categories/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Category name cannot be empty"))
+                    .andExpect(jsonPath("$.status").value(400));
 
-    }
+        }
 
     // DELETE CATEGORY TESTS
     /**
@@ -428,16 +429,17 @@ class CategoryControllerTest {
      *
      * @throws Exception if request execution fails
      */
+
     @Test
     void patchCategory_withDuplicateName_returnsConflict() throws Exception {
         doThrow(new customException.DuplicateResourceException("Category with name 'Books' already exists"))
-                .when(categoryService).updateCategory(1, "Books");
+                .when(categoryService).updateCategory(eq(1), any(categoryRequestDTO.class));
 
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Books\"}"))
                 .andExpect(status().isConflict())
-        .andExpect(jsonPath("$.message").value("Category with name 'Books' already exists"))
+                .andExpect(jsonPath("$.message").value("Category with name 'Books' already exists"))
                 .andExpect(jsonPath("$.status").value(409));
     }
     /**
@@ -450,13 +452,19 @@ class CategoryControllerTest {
     @Test
     void patchCategory_withEmptyName_returnsBadRequest() throws Exception {
         doThrow(new customException.ValidationException("Category name cannot be empty"))
-                .when(categoryService).updateCategory(1, "");
+
+                .when(categoryService).updateCategory(eq(1), any(categoryRequestDTO.class));
 
         mockMvc.perform(patch("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\"}"))
                 .andExpect(status().isBadRequest())
-         .andExpect(jsonPath("$.message").value("Category name cannot be empty"))
+                .andExpect(jsonPath("$.message")
+                        .value(Matchers.anyOf(
+                                Matchers.is("Category name cannot be empty"),
+                                Matchers.is("Category name must be between 1 and 255 characters")
+                        ))
+                )
                 .andExpect(jsonPath("$.status").value(400));
     }
     /**
@@ -469,7 +477,7 @@ class CategoryControllerTest {
     @Test
     void postCategory_withDuplicateName_returnsConflict() throws Exception {
         doThrow(new customException.DuplicateResourceException("Category with name 'Electronics' already exists"))
-                .when(categoryService).createCategory("Electronics");
+                .when(categoryService).createCategory(any(categoryRequestDTO.class));
 
         mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)

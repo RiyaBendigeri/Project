@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dto.categoryRequestDTO;
 import org.example.exception.customException;
 import org.example.model.Category;
 import org.example.repository.categoryRepository;
@@ -71,15 +72,19 @@ public  class categoryService {
      * @throws customException.ValidationException if the category name is null, empty, or only whitespace.
      * @throws customException.DuplicateResourceException if a category with the same name (case-insensitive) already exists.
      */
-    public Category createCategory(String name) {
-        if (name == null || name.trim().isEmpty()) {
+
+    public Category createCategory(categoryRequestDTO dto) {
+
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new customException.ValidationException("Category name cannot be empty");
         }
-        if (repo.existsByNameIgnoreCase(name.trim())) {
+        String name = dto.getName().trim();
+        if (repo.existsByNameIgnoreCase(name)) {
             throw new customException.DuplicateResourceException("Category with name '" + name + "' already exists");
         }
+
         Category category = new Category();
-        category.setName(name.trim());
+        category.setName(name);
         return repo.save(category);
     }
     /**
@@ -94,18 +99,17 @@ public  class categoryService {
      *                                                    and it's not the same category being updated.
      */
 
-    public Category updateCategory(int id, String newName) {
-
+    public Category updateCategory(int id, categoryRequestDTO dto) {
         Category existing = getCategoryById(id);
-
-        if (newName == null || newName.trim().isEmpty()) {
+        String newName = dto.getName().trim();
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new customException.ValidationException("Category name cannot be empty");
         }
-        if (repo.existsByNameIgnoreCase(newName.trim()) &&
-                !existing.getName().equalsIgnoreCase(newName.trim())) {
+        if (repo.existsByNameIgnoreCase(newName) &&
+                !existing.getName().equalsIgnoreCase(newName)) {
             throw new customException.DuplicateResourceException("Category with name '" + newName + "' already exists");
         }
-        existing.setName(newName.trim());
+        existing.setName(newName);
         return repo.save(existing);
     }
     /**
@@ -120,6 +124,7 @@ public  class categoryService {
         if (!repo.existsById(id)) {
             throw new customException.ResourceNotFoundException("Category with ID " + id + " not found");
         }
+
 // Check if products exist for this categoryId
         boolean hasProducts = productRepo.existsBycategoryId(id);
         if (hasProducts) {

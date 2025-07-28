@@ -244,6 +244,8 @@
 //}
 package org.example.controller;
 
+import org.example.dto.productPatchDTO;
+import org.example.dto.productRequestDTO;
 import org.example.model.Product;
 import org.example.services.productService;
 import org.junit.jupiter.api.Test;
@@ -365,19 +367,35 @@ class ProductControllerTest {
      *
      * @throws Exception if request execution fails
      */
+//    @Test
+//    void addProduct_WithValidData_ReturnsCreated() throws Exception {
+//        Product product = new Product();
+//        product.setName("Laptop");
+//        product.setPrice(1000);
+//
+//        Map<String, Object> requestBody = Map.of(
+//                "name", "Laptop",
+//                "price", 1000,
+//                "categoryId", 1
+//        );
+//
+//        when(productService.createProduct(anyMap())).thenReturn(product);
+//
+//        mockMvc.perform(post("/api/products")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryId\":1}"))
+//                .andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.name").value("Laptop"))
+//                .andExpect(jsonPath("$.price").value(1000));
+//    }
+
     @Test
     void addProduct_WithValidData_ReturnsCreated() throws Exception {
         Product product = new Product();
         product.setName("Laptop");
         product.setPrice(1000);
 
-        Map<String, Object> requestBody = Map.of(
-                "name", "Laptop",
-                "price", 1000,
-                "categoryId", 1
-        );
-
-        when(productService.createProduct(anyMap())).thenReturn(product);
+        when(productService.createProduct(any(productRequestDTO.class))).thenReturn(product);
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -386,22 +404,6 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.name").value("Laptop"))
                 .andExpect(jsonPath("$.price").value(1000));
     }
-
-    // Test POST with duplicate name
-//        @Test
-//        void addProduct_WithDuplicateName_ReturnsConflict() throws Exception {
-//            when(productService.createProduct(anyMap())).thenThrow(
-//                    new org.example.exception.customException.DuplicateResourceException("Product with name 'Laptop' already exists")
-//            );
-//
-//            mockMvc.perform(post("/api/products")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content("{\"name\":\"Laptop\",\"price\":1000,\"categoryId\":1}"))
-//                    .andExpect(status().isConflict())
-//                    .andExpect(content().string("Product with name 'Laptop' already exists"));
-//        }
-
-    // Test PATCH with valid update
     /**
      * Test PATCH /api/products/{id} with valid update data.
      * Mocks the service to update and return the updated product.
@@ -409,16 +411,48 @@ class ProductControllerTest {
      *
      * @throws Exception if request execution fails
      */
+//    @Test
+//    void updateProduct_WithValidData_ReturnsOk() throws Exception {
+//        Product updatedProduct = new Product();
+//        updatedProduct.setName("Updated Laptop");
+//        updatedProduct.setPrice(1500);
+//
+//        when(productService.updateProduct(eq(5), any(productRequestDTO.class))).thenReturn(updatedProduct);
+//
+//        mockMvc.perform(patch("/api/products/5")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"name\":\"Updated Laptop\",\"price\":1500}"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.name").value("Updated Laptop"))
+//                .andExpect(jsonPath("$.price").value(1500));
+//    }
+//    @Test
+//    void updateProduct_WithValidData_ReturnsOk() throws Exception {
+//        Product updated = new Product();
+//        updated.setName("Updated Laptop");
+//        updated.setPrice(1500);
+//
+//        when(productService.updateProduct(eq(5), any(productRequestDTO.class))).thenReturn(updated);
+//
+//        mockMvc.perform(patch("/api/products/5")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"name\":\"Updated Laptop\",\"price\":1500,\"categoryId\":1}"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.name").value("Updated Laptop"))
+//                .andExpect(jsonPath("$.price").value(1500));
+//    }
     @Test
     void updateProduct_WithValidData_ReturnsOk() throws Exception {
-        Product updatedProduct = new Product();
-        updatedProduct.setName("Updated Laptop");
-        updatedProduct.setPrice(1500);
+        Product updated = new Product();
+        updated.setName("Updated Laptop");
+        updated.setPrice(1500);
 
-        when(productService.updateProduct(eq(5), anyMap())).thenReturn(updatedProduct);
+        // use patchProduct, not updateProduct if your service method is renamed for partial
+        when(productService.updateProduct(eq(5), any(productPatchDTO.class))).thenReturn(updated);
 
         mockMvc.perform(patch("/api/products/5")
                         .contentType(MediaType.APPLICATION_JSON)
+                        // You can send only the fields you want to update, or all
                         .content("{\"name\":\"Updated Laptop\",\"price\":1500}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Laptop"))
@@ -442,16 +476,13 @@ class ProductControllerTest {
                 .andExpect(content().string("Product deleted successfully"));
     }
 
-    // Test DELETE when NOT exists
-//    @Test
-//    void deleteProduct_WhenNotExists_ReturnsNotFound() throws Exception {
-//        doThrow(new org.example.exception.customException.ResourceNotFoundException("Product with ID 999 not found, cannot delete"))
-//                .when(productService).deleteProduct(999);
-//
-//        mockMvc.perform(delete("/api/products/999"))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Product with ID 999 not found, cannot delete"));
-//    }
-
-    // ...more tests for other controller scenarios as needed
+    @Test
+    void addProduct_WithMissingName_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"price\":1000,\"categoryId\":1}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Product name cannot be empty"))
+                .andExpect(jsonPath("$.status").value(400));
+    }
 }

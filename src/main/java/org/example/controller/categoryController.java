@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
+import org.example.dto.categoryRequestDTO;
 import org.example.exception.customException;
 import org.example.model.Category;
 import org.example.services.categoryService;
@@ -27,7 +29,7 @@ public class categoryController {
  */
     @GetMapping("/categories")
     //gets all categories
-    public ResponseEntity<?> getAllCategories() {
+    public ResponseEntity<Object> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
         if (categories.isEmpty()) {
             return ResponseEntity.ok(Map.of("message", "No categories available to display"));
@@ -41,49 +43,34 @@ public class categoryController {
      * @return ResponseEntity containing the category.
      */
     @GetMapping("/categories/{id}")
-    public ResponseEntity<?> getCategory(@PathVariable int id) {
+    public ResponseEntity<Category> getCategory(@PathVariable int id) {
         Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
     /**
      * Creates a new category.
     */
+
     @PostMapping("/categories")
-    public ResponseEntity<?> postCategory(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Category> postCategory(@Valid @RequestBody categoryRequestDTO dto) {
 
-        if (!requestBody.containsKey("name")) {
-            throw new customException.ValidationException("Name is required");
-        }
-        Set<String> allowedFields = Set.of("name");
-
-    // Check for extra fields
-    if (requestBody.keySet().stream()
-            .anyMatch(key -> !allowedFields.contains(key))) {
-        return ResponseEntity.status(400)
-                .body("Invalid request. Only 'name' field is allowed. Extra fields are not permitted.");
-    }
-        String name = (String) requestBody.get("name");
-        Category saved = categoryService.createCategory(name);
+        Category saved = categoryService.createCategory(dto);
         return ResponseEntity.status(201).body(saved);
     }
 /**
  * Updates the name of an existing category.
  */
-    @PatchMapping("/categories/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable int id, @RequestBody Map<String, String> updates) {
 
-        if (!updates.containsKey("name")) {
-            throw new customException.ValidationException("Name is required for update");
-        }
-        String newName = (String) updates.get("name");
-        Category updated = categoryService.updateCategory(id, newName);
-        return ResponseEntity.ok(updated);
-    }
+@PatchMapping("/categories/{id}")
+public ResponseEntity<Category> updateCategory(@PathVariable int id, @Valid @RequestBody categoryRequestDTO dto) {
+    Category updated = categoryService.updateCategory(id, dto);
+    return ResponseEntity.ok(updated);
+}
 /**
  * Deletes a category by its ID.
  */
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable int id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable int id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category successfully deleted");
     }
