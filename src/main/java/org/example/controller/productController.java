@@ -33,7 +33,7 @@ public class productController {
      *         or a message if no products are available.
      */
     @GetMapping("/products")
-    public ResponseEntity<Object> getProducts() {
+    public ResponseEntity<?> getProducts() {
         List<Product> products = productService.getAllProducts();
         if (products.isEmpty()) {
             return ResponseEntity.ok(Map.of("message", "No products available to display"));
@@ -47,7 +47,7 @@ public class productController {
      * @return ResponseEntity containing the requested product.
      */
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable int id) {
+    public ResponseEntity<?> getProduct(@PathVariable int id) {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
@@ -65,7 +65,7 @@ public class productController {
 
 
     @PostMapping("/products")
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody productRequestDTO dto) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody productRequestDTO dto) {
         Product savedProduct = productService.createProduct(dto);
         return ResponseEntity.status(201).body(savedProduct);
     }
@@ -79,7 +79,7 @@ public class productController {
      */
 
     @PatchMapping("/products/{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable Integer id, @RequestBody productPatchDTO dto) {
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody productPatchDTO dto) {
         if (dto.getName() == null && dto.getPrice() == null && dto.getCategoryId() == null) {
             return ResponseEntity.badRequest()
                     .body(new errorResponse("At least one field must be provided for update", 400));
@@ -94,7 +94,7 @@ public class productController {
      * @return ResponseEntity with a success message.
      */
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> removeProduct(@PathVariable int id) {
+    public ResponseEntity<?> removeProduct(@PathVariable int id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }

@@ -29,7 +29,7 @@ public class categoryController {
  */
     @GetMapping("/categories")
     //gets all categories
-    public ResponseEntity<Object> getAllCategories() {
+    public ResponseEntity<?> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
         if (categories.isEmpty()) {
             return ResponseEntity.ok(Map.of("message", "No categories available to display"));
@@ -43,7 +43,7 @@ public class categoryController {
      * @return ResponseEntity containing the category.
      */
     @GetMapping("/categories/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable int id) {
+    public ResponseEntity<?> getCategory(@PathVariable int id) {
         Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
@@ -52,7 +52,7 @@ public class categoryController {
     */
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> postCategory(@Valid @RequestBody categoryRequestDTO dto) {
+    public ResponseEntity<?> postCategory(@Valid @RequestBody categoryRequestDTO dto) {
 
         Category saved = categoryService.createCategory(dto);
         return ResponseEntity.status(201).body(saved);
@@ -62,7 +62,7 @@ public class categoryController {
  */
 
 @PatchMapping("/categories/{id}")
-public ResponseEntity<Category> updateCategory(@PathVariable int id, @Valid @RequestBody categoryRequestDTO dto) {
+public ResponseEntity<?> updateCategory(@PathVariable int id, @Valid @RequestBody categoryRequestDTO dto) {
     Category updated = categoryService.updateCategory(id, dto);
     return ResponseEntity.ok(updated);
 }
@@ -70,7 +70,7 @@ public ResponseEntity<Category> updateCategory(@PathVariable int id, @Valid @Req
  * Deletes a category by its ID.
  */
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable int id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable int id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category successfully deleted");
     }
