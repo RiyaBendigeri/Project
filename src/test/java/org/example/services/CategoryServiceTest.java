@@ -1,15 +1,14 @@
 //12 cases for this categoryservice
 package org.example.services;
-
 import org.example.exception.customException;
 import org.example.model.Category;
 import org.example.repository.categoryRepository;
+import org.example.repository.productRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
 import java.util.*;
-
+import org.example.dto.categoryRequestDTO;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 /**
@@ -23,6 +22,9 @@ class CategoryServiceTest {
 
     @Mock
     private categoryRepository repo;
+
+    @Mock
+    private productRepository productRepo;
 
     @InjectMocks
     private categoryService service;
@@ -90,10 +92,20 @@ class CategoryServiceTest {
      * Test createCategory with empty name.
      * Expects ValidationException due to invalid input.
      */
+//    @Test
+//    void createCategory_EmptyName_ThrowsValidation() {
+//        Exception ex = assertThrows(customException.ValidationException.class,
+//                () -> service.createCategory(""));
+//
+//        assertEquals("Category name cannot be empty", ex.getMessage());
+//    }
     @Test
     void createCategory_EmptyName_ThrowsValidation() {
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("");
+
         Exception ex = assertThrows(customException.ValidationException.class,
-                () -> service.createCategory(""));
+                () -> service.createCategory(dto));
         assertEquals("Category name cannot be empty", ex.getMessage());
     }
 
@@ -105,10 +117,11 @@ class CategoryServiceTest {
      */
     @Test
     void createCategory_Duplicate_ThrowsDuplicateResource() {
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("Electronics");
         when(repo.existsByNameIgnoreCase("Electronics")).thenReturn(true);
-
         Exception ex = assertThrows(customException.DuplicateResourceException.class,
-                () -> service.createCategory("Electronics"));
+                () -> service.createCategory(dto));
         assertEquals("Category with name 'Electronics' already exists", ex.getMessage());
     }
 
@@ -118,6 +131,19 @@ class CategoryServiceTest {
      * Mocks repository to save and return the category.
      * Verifies that the category is saved and returned correctly.
      */
+//    @Test
+//    void createCategory_Valid_SavesAndReturns() {
+//
+//        when(repo.existsByNameIgnoreCase("Books")).thenReturn(false);
+//
+//        Category cat = new Category();
+//        cat.setName("Books");
+//        when(repo.save(any(Category.class))).thenReturn(cat);
+//
+//        Category result = service.createCategory("Books");
+//        assertEquals("Books", result.getName());
+//        verify(repo, times(1)).save(any(Category.class));
+//    }
     @Test
     void createCategory_Valid_SavesAndReturns() {
         when(repo.existsByNameIgnoreCase("Books")).thenReturn(false);
@@ -126,7 +152,10 @@ class CategoryServiceTest {
         cat.setName("Books");
         when(repo.save(any(Category.class))).thenReturn(cat);
 
-        Category result = service.createCategory("Books");
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("Books");
+
+        Category result = service.createCategory(dto);
         assertEquals("Books", result.getName());
         verify(repo, times(1)).save(any(Category.class));
     }
@@ -137,28 +166,51 @@ class CategoryServiceTest {
      * Mocks repository to return empty .
      * Expects ResourceNotFoundException with correct message.
      */
+//    @Test
+//    void updateCategory_CategoryNotExists_ThrowsResourceNotFound() {
+//        when(repo.findById(6)).thenReturn(Optional.empty());
+//
+//        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
+//                () -> service.updateCategory(6, "NewName"));
+//        assertEquals("Category with ID 6 not found", ex.getMessage());
+//    }
     @Test
     void updateCategory_CategoryNotExists_ThrowsResourceNotFound() {
         when(repo.findById(6)).thenReturn(Optional.empty());
 
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("NewName");
+
         Exception ex = assertThrows(customException.ResourceNotFoundException.class,
-                () -> service.updateCategory(6, "NewName"));
+                () -> service.updateCategory(6, dto));
         assertEquals("Category with ID 6 not found", ex.getMessage());
     }
-
     // UPDATE CATEGORY - empty name
     /**
      * Test updateCategory with empty new name.
      * Expects ValidationException due to invalid name.
      */
+//    @Test
+//    void updateCategory_EmptyNewName_ThrowsValidationException() {
+//        Category cat = new Category();
+//        cat.setName("Electronics");
+//        when(repo.findById(5)).thenReturn(Optional.of(cat));
+//
+//        Exception ex = assertThrows(customException.ValidationException.class,
+//                () -> service.updateCategory(5, ""));
+//        assertEquals("Category name cannot be empty", ex.getMessage());
+//    }
     @Test
     void updateCategory_EmptyNewName_ThrowsValidationException() {
         Category cat = new Category();
         cat.setName("Electronics");
         when(repo.findById(5)).thenReturn(Optional.of(cat));
 
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName(""); // or even "   " for blank test
+
         Exception ex = assertThrows(customException.ValidationException.class,
-                () -> service.updateCategory(5, "  "));
+                () -> service.updateCategory(5, dto));
         assertEquals("Category name cannot be empty", ex.getMessage());
     }
 
@@ -169,6 +221,17 @@ class CategoryServiceTest {
      * Expects DuplicateResourceException with correct message.
      */
 
+//    @Test
+//    void updateCategory_DuplicateName_ThrowsDuplicateResourceException() {
+//        Category cat = new Category();
+//        cat.setName("Electronics");
+//        when(repo.findById(4)).thenReturn(Optional.of(cat));
+//        when(repo.existsByNameIgnoreCase("Books")).thenReturn(true);
+//
+//        Exception ex = assertThrows(customException.DuplicateResourceException.class,
+//                () -> service.updateCategory(4, "Books"));
+//        assertEquals("Category with name 'Books' already exists", ex.getMessage());
+//    }
     @Test
     void updateCategory_DuplicateName_ThrowsDuplicateResourceException() {
         Category cat = new Category();
@@ -176,8 +239,11 @@ class CategoryServiceTest {
         when(repo.findById(4)).thenReturn(Optional.of(cat));
         when(repo.existsByNameIgnoreCase("Books")).thenReturn(true);
 
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("Books");
+
         Exception ex = assertThrows(customException.DuplicateResourceException.class,
-                () -> service.updateCategory(4, "Books"));
+                () -> service.updateCategory(4, dto));
         assertEquals("Category with name 'Books' already exists", ex.getMessage());
     }
 
@@ -187,6 +253,21 @@ class CategoryServiceTest {
      * Mocks repository to find, update and save category.
      * Verifies the update and save operations occur and result is correct.
      */
+//    @Test
+//    void updateCategory_Valid_UpdateAndSave() {
+//        Category cat = new Category();
+//        cat.setName("Electronics");
+//        when(repo.findById(3)).thenReturn(Optional.of(cat));
+//        when(repo.existsByNameIgnoreCase("Books")).thenReturn(false);
+//
+//        Category updatedCat = new Category();
+//        updatedCat.setName("Books");
+//        when(repo.save(any(Category.class))).thenReturn(updatedCat);
+//
+//        Category result = service.updateCategory(3, "Books");
+//        assertEquals("Books", result.getName());
+//        verify(repo, times(1)).save(cat);
+//    }
     @Test
     void updateCategory_Valid_UpdateAndSave() {
         Category cat = new Category();
@@ -198,7 +279,10 @@ class CategoryServiceTest {
         updatedCat.setName("Books");
         when(repo.save(any(Category.class))).thenReturn(updatedCat);
 
-        Category result = service.updateCategory(3, "Books");
+        categoryRequestDTO dto = new categoryRequestDTO();
+        dto.setName("Books");
+
+        Category result = service.updateCategory(3, dto);
         assertEquals("Books", result.getName());
         verify(repo, times(1)).save(cat);
     }
@@ -227,7 +311,7 @@ class CategoryServiceTest {
     @Test
     void deleteCategory_Exists_Deletes() {
         when(repo.existsById(70)).thenReturn(true);
-
+        when(productRepo.existsBycategoryId(70)).thenReturn(false);
         service.deleteCategory(70);
 
         verify(repo, times(1)).deleteById(70);

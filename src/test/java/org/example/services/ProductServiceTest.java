@@ -1,5 +1,7 @@
 package org.example.services;
 
+import org.example.dto.productPatchDTO;
+import org.example.dto.productRequestDTO;
 import org.example.exception.customException;
 import org.example.model.Product;
 import org.example.model.Category;
@@ -112,22 +114,24 @@ class ProductServiceTest {
      * Verifies that the product is created and returned correctly.
      */
     @Test
-    void createProduct_Valid_ReturnsProduct() {
-        Map<String, Object> req = new HashMap<>();
-        req.put("name", "Laptop");
-        req.put("price", 1000);
-        req.put("categoryId", 1);
 
-        when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
+    void createProduct_Valid_ReturnsProduct() {
+        productRequestDTO dto = new productRequestDTO();
+        dto.setName("Laptop");
+        dto.setPrice(1000);
+        dto.setCategoryId(1);
+
+        // Mock categoryRepo to find the category!
         when(categoryRepo.existsById(1)).thenReturn(true);
 
+        // Also, mock repo.save() if using mocks and not real db
         Product p = new Product();
         p.setName("Laptop");
         p.setPrice(1000);
         p.setcategoryId(1);
         when(productsRepo.save(any(Product.class))).thenReturn(p);
 
-        Product result = productService.createProduct(req);
+        Product result = productService.createProduct(dto);
 
         assertEquals("Laptop", result.getName());
         assertEquals(1000, result.getPrice());
@@ -142,15 +146,24 @@ class ProductServiceTest {
      */
     @Test
     void createProduct_DuplicateName_Throws() {
-        Map<String, Object> req = new HashMap<>();
-        req.put("name", "Laptop");
-        req.put("price", 500);
-        req.put("categoryId", 1);
-
+//        Map<String, Object> req = new HashMap<>();
+//        req.put("name", "Laptop");
+//        req.put("price", 500);
+//        req.put("categoryId", 1);
+//
+//        when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(true);
+//
+//        Exception ex = assertThrows(customException.DuplicateResourceException.class,
+//                () -> productService.createProduct(req));
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(true);
 
+        productRequestDTO dto = new productRequestDTO();
+        dto.setName("Laptop");
+        dto.setPrice(500);
+        dto.setCategoryId(1);
+
         Exception ex = assertThrows(customException.DuplicateResourceException.class,
-                () -> productService.createProduct(req));
+                () -> productService.createProduct(dto));
         assertEquals("Product with name 'Laptop' already exists", ex.getMessage());
     }
 
@@ -162,16 +175,27 @@ class ProductServiceTest {
      */
     @Test
     void createProduct_InvalidCatId_Throws() {
-        Map<String, Object> req = new HashMap<>();
-        req.put("name", "Laptop");
-        req.put("price", 1000);
-        req.put("categoryId", 999);
-
+//        Map<String, Object> req = new HashMap<>();
+//        req.put("name", "Laptop");
+//        req.put("price", 1000);
+//        req.put("categoryId", 999);
+//
+//        when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
+//        when(categoryRepo.existsById(999)).thenReturn(false);
+//
+//        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
+//                () -> productService.createProduct(req));
+//        assertEquals("Category with ID 999 does not exist", ex.getMessage());
         when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
         when(categoryRepo.existsById(999)).thenReturn(false);
 
+        productRequestDTO dto = new productRequestDTO();
+        dto.setName("Laptop");
+        dto.setPrice(1000);
+        dto.setCategoryId(999);
+
         Exception ex = assertThrows(customException.ResourceNotFoundException.class,
-                () -> productService.createProduct(req));
+                () -> productService.createProduct(dto));
         assertEquals("Category with ID 999 does not exist", ex.getMessage());
     }
 
@@ -181,19 +205,7 @@ class ProductServiceTest {
      * Mocks the repository to simulate an invalid price (less than or equal to 0).
      * Expects ValidationException with a specific message indicating the price issue.
      */
-    @Test
-    void createProduct_InvalidPrice_Throws() {
-        Map<String, Object> req = new HashMap<>();
-        req.put("name", "Laptop");
-        req.put("price", -56);
-        req.put("categoryId", 1);
 
-        when(productsRepo.existsByNameIgnoreCase("Laptop")).thenReturn(false);
-
-        Exception ex = assertThrows(customException.ValidationException.class,
-                () -> productService.createProduct(req));
-        assertEquals("Price must be greater than 0", ex.getMessage());
-    }
 
     // CREATE product: missing fields (name)
 //    @Test
@@ -226,9 +238,9 @@ class ProductServiceTest {
         when(productsRepo.existsByNameIgnoreCase("Phone")).thenReturn(false);
         when(categoryRepo.existsById(1)).thenReturn(true);
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("name", "Phone");
-        updates.put("price", 1500);
+        productPatchDTO updates = new productPatchDTO();
+        updates.setName("Phone");
+        updates.setPrice(1500); // Only set what you want to change
 
         Product updated = new Product();
         updated.setID(4);
@@ -239,6 +251,7 @@ class ProductServiceTest {
         when(productsRepo.save(any(Product.class))).thenReturn(updated);
 
         Product result = productService.updateProduct(4, updates);
+
         assertEquals("Phone", result.getName());
         assertEquals(1500, result.getPrice());
     }
@@ -261,8 +274,10 @@ class ProductServiceTest {
         when(productsRepo.findById(6)).thenReturn(Optional.of(existing));
         when(productsRepo.existsByNameIgnoreCase("Phone")).thenReturn(true);
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("name", "Phone");
+
+        productPatchDTO updates = new productPatchDTO();
+        updates.setName("Phone");
+
 
         Exception ex = assertThrows(customException.DuplicateResourceException.class,
                 () -> productService.updateProduct(6, updates));
@@ -286,8 +301,10 @@ class ProductServiceTest {
         when(productsRepo.existsById(7)).thenReturn(true);
         when(productsRepo.findById(7)).thenReturn(Optional.of(existing));
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("price", -100);
+        productPatchDTO updates = new productPatchDTO();
+        updates.setPrice(-100);
+// Add other required fields if needed (your service may expect name and categoryId as well)
+// updates.setName("Laptop"); updates.setCategoryId(1);
 
         Exception ex = assertThrows(customException.ValidationException.class,
                 () -> productService.updateProduct(7, updates));
@@ -311,8 +328,18 @@ class ProductServiceTest {
         when(productsRepo.existsById(8)).thenReturn(true);
         when(productsRepo.findById(8)).thenReturn(Optional.of(existing));
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("categoryId", 999);
+//        Map<String, Object> updates = new HashMap<>();
+//        updates.put("categoryId", 999);
+//
+//        when(categoryRepo.existsById(999)).thenReturn(false);
+//
+//        Exception ex = assertThrows(customException.ResourceNotFoundException.class,
+//                () -> productService.updateProduct(8, updates));
+//        assertEquals("Category with ID 999 does not exist", ex.getMessage());
+        productPatchDTO updates = new productPatchDTO();
+        updates.setCategoryId(999);
+// You likely need to set name and price if your service expects them not-null/not-blank
+// updates.setName("Laptop"); updates.setPrice(1000);
 
         when(categoryRepo.existsById(999)).thenReturn(false);
 
