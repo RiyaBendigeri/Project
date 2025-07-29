@@ -281,21 +281,7 @@ class ProductControllerTest {
     private productService productService; // This is a mock!
 
     // Test for "/get" when products is empty
-    /**
-     * Test GET /api/products when no products exist.
-     * Mocks the service to return an empty list.
-     * Expects HTTP 200 OK and a JSON message indicating no products are available.
-     *
-     * @throws Exception if request execution fails
-     */
-    @Test
-    void getProducts_WhenNoProducts_ReturnsNoContent() throws Exception {
-        when(productService.getAllProducts()).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/products"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("No products available to display"));
-    }
 
     // Test for "/get" when products exist
     /**

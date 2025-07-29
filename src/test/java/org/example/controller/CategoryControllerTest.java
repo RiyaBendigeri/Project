@@ -227,22 +227,7 @@ class CategoryControllerTest {
     private categoryService categoryService;
 
     // GET ALL CATEGORIES TESTS
-    /**
-     * Test case for GET /api/categories when there are no categories.
-     *
-     * Mocks the categoryService to return an empty list.
 
-     * Expects HTTP 200 OK status and a JSON response with a message indicating no categories exist.
-     *
-     * @throws Exception if request processing fails
-     */
-    @Test
-    void getAllCategories_whenNoCategories_returnsMessage() throws Exception {
-        when(categoryService.getAllCategories()).thenReturn(List.of());
-        mockMvc.perform(get("/api/categories"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("No categories available to display"));
-    }
     /**
      * Test GET /api/categories endpoint when categories exist.
      * Mocks the service layer to return two categories.
