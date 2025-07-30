@@ -65,6 +65,7 @@ public class globalexceptionHandler {
      * @param ex the NoHandlerFoundException instance
      * @return a ResponseEntity containing the error details and HTTP status 404
      */
+    //nohandler when url gone wrong
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<errorResponse> handleNoHandler(NoHandlerFoundException ex) {
         String message = "No resource found at " + ex.getRequestURL();
@@ -96,6 +97,7 @@ public class globalexceptionHandler {
                     .body(new errorResponse("Request body is missing or empty", 400));
         }
         Throwable cause = ex.getCause();
+        //for extra fields if entered
         if (cause instanceof com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException) {
             String property = ((com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException) cause).getPropertyName();
             String message = "Invalid request. Property '" + property + "' is not allowed.";
@@ -114,7 +116,7 @@ public class globalexceptionHandler {
      * @param ex the Exception instance
      * @return a ResponseEntity containing the error details and HTTP status 500
      */
-
+//handles other exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<errorResponse> handleGeneric(Exception ex) {
         errorResponse error = new errorResponse("Something went wrong: " + ex.getMessage(), 500);

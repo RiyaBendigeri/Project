@@ -169,3 +169,5 @@ Post Request for products:
 "price":10000,
 "catid":1
 }
+ 
+## The swagger ui is seen at :http://localhost:8080/swagger-ui/index.html#/

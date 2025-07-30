@@ -1,6 +1,4 @@
 
-
-// src/main/java/org/example/dto/productRequestDTO.java
 package org.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
